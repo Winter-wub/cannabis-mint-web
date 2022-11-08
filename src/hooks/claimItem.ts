@@ -10,7 +10,7 @@ const contract = new Contract(canItemAddress, wethinterface) as CanItem;
 
 function useClaimCanItem() {
   const { state, send } = useContractFunction(contract, "claimNFT", {
-    transactionName: "Claim NFT",
+    transactionName: "Claim NFT", // optional
     gasLimitBufferPercentage: 10,
   });
 

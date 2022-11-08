@@ -10,13 +10,14 @@ function App() {
   const { claimNFT, state } = useClaimCanItem();
 
   // get item that user claimed
-  const { balance: item1 } = useInventory(1); // premuim
-  const { balance: item2 } = useInventory(2); // ultimate rare
-  const { balance: item3 } = useInventory(3); // super rare
-  const { balance: item4 } = useInventory(4); // top rare
+  const { balance: item1, image: item1URI } = useInventory(1); // premuim
+  const { balance: item2, image: item2URI } = useInventory(2); // ultimate rare
+  const { balance: item3, image: item3URI } = useInventory(3); // super rare
+  const { balance: item4, image: item4URI } = useInventory(4); // top rare
 
   const onClickMint = useCallback(async () => {
     try {
+      // fetch api first price
       const trxReceipt = await claimNFT({
         value: utils.parseEther("0.000005"),
       });
@@ -53,10 +54,38 @@ function App() {
                 : "  Mint Item"}
             </button>
             <br />
-            <div>Premium: {item1.toString()}</div>
-            <div>Super Rare: {item2.toString()}</div>
-            <div>Ultimate Rare: {item3.toString()}</div>
-            <div>Top Rare: {item4.toString()}</div>
+            <div>
+              <img
+                src={item1URI as string}
+                alt="item1"
+                style={{ width: 320, height: 400 }}
+              />
+              Premium: {item1.toString()}
+            </div>
+            <div>
+              <img
+                src={item2URI as string}
+                alt="item2"
+                style={{ width: 320, height: 400 }}
+              />
+              Super Rare: {item2.toString()}
+            </div>
+            <div>
+              <img
+                src={item3URI as string}
+                alt="item3"
+                style={{ width: 320, height: 400 }}
+              />
+              Ultimate: {item3.toString()}
+            </div>
+            <div>
+              <img
+                src={item4URI as string}
+                alt="item4"
+                style={{ width: 320, height: 400 }}
+              />
+              Top Rare: {item1.toString()}
+            </div>
           </div>
         )}
       </div>
