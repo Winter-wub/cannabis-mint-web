@@ -294,15 +294,15 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "claimNFT",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "claimNFT",
-    "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },

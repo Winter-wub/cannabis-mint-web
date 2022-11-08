@@ -34,7 +34,7 @@ export interface CanItemInterface extends utils.Interface {
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
     "burnBatch(address,uint256[],uint256[])": FunctionFragment;
-    "claimNFT(uint256)": FunctionFragment;
+    "claimNFT()": FunctionFragment;
     "exists(uint256)": FunctionFragment;
     "initialize()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
@@ -44,6 +44,7 @@ export interface CanItemInterface extends utils.Interface {
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
+    "random(uint256,uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
@@ -76,6 +77,7 @@ export interface CanItemInterface extends utils.Interface {
       | "owner"
       | "pause"
       | "paused"
+      | "random"
       | "renounceOwnership"
       | "safeBatchTransferFrom"
       | "safeTransferFrom"
@@ -116,10 +118,7 @@ export interface CanItemInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>[]
     ]
   ): string;
-  encodeFunctionData(
-    functionFragment: "claimNFT",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+  encodeFunctionData(functionFragment: "claimNFT", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "exists",
     values: [PromiseOrValue<BigNumberish>]
@@ -154,6 +153,10 @@ export interface CanItemInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "random",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -240,6 +243,7 @@ export interface CanItemInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "random", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -451,7 +455,6 @@ export interface CanItem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     claimNFT(
-      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -495,6 +498,12 @@ export interface CanItem extends BaseContract {
     ): Promise<ContractTransaction>;
 
     paused(overrides?: CallOverrides): Promise<[boolean]>;
+
+    random(
+      maxNumber: PromiseOrValue<BigNumberish>,
+      minNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -601,7 +610,6 @@ export interface CanItem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   claimNFT(
-    tokenId: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -645,6 +653,12 @@ export interface CanItem extends BaseContract {
   ): Promise<ContractTransaction>;
 
   paused(overrides?: CallOverrides): Promise<boolean>;
+
+  random(
+    maxNumber: PromiseOrValue<BigNumberish>,
+    minNumber: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -750,10 +764,7 @@ export interface CanItem extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    claimNFT(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    claimNFT(overrides?: CallOverrides): Promise<void>;
 
     exists(
       id: PromiseOrValue<BigNumberish>,
@@ -791,6 +802,12 @@ export interface CanItem extends BaseContract {
     pause(overrides?: CallOverrides): Promise<void>;
 
     paused(overrides?: CallOverrides): Promise<boolean>;
+
+    random(
+      maxNumber: PromiseOrValue<BigNumberish>,
+      minNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -967,7 +984,6 @@ export interface CanItem extends BaseContract {
     ): Promise<BigNumber>;
 
     claimNFT(
-      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1011,6 +1027,12 @@ export interface CanItem extends BaseContract {
     ): Promise<BigNumber>;
 
     paused(overrides?: CallOverrides): Promise<BigNumber>;
+
+    random(
+      maxNumber: PromiseOrValue<BigNumberish>,
+      minNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1118,7 +1140,6 @@ export interface CanItem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimNFT(
-      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1162,6 +1183,12 @@ export interface CanItem extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    random(
+      maxNumber: PromiseOrValue<BigNumberish>,
+      minNumber: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }

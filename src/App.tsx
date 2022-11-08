@@ -4,25 +4,22 @@ import { useCallback } from "react";
 import "./App.css";
 import useClaimCanItem from "./hooks/claimItem";
 import useInventory from "./hooks/inventory";
-
 function App() {
   const { activateBrowserWallet, account, deactivate, chainId } = useEthers();
   const { readOnlyUrls } = useConfig();
-  const { claimNFT } = useClaimCanItem();
+  const { claimNFT, state } = useClaimCanItem();
+
   // get item that user claimed
   const { balance: item1 } = useInventory(1); // premuim
   const { balance: item2 } = useInventory(2); // ultimate rare
-  const { balance: item3 } = useInventory(3); // legendary
+  const { balance: item3 } = useInventory(3); // super rare
   const { balance: item4 } = useInventory(4); // top rare
 
   const onClickMint = useCallback(async () => {
     try {
-      // should random tokenId from server because onChain is not secure
-      // logic random we can control the rate of mint
-      const randomId = Math.floor(Math.random() * 4) + 1;
-      // price can control by server
-      const price = utils.parseEther("0.000005");
-      const trxReceipt = await claimNFT(randomId, { value: price });
+      const trxReceipt = await claimNFT({
+        value: utils.parseEther("0.000005"),
+      });
       if (trxReceipt) {
         alert("Mint success at " + trxReceipt.blockHash);
       } else {
@@ -47,7 +44,14 @@ function App() {
           <div>
             <div>Account: {account}</div>
             <div>Network ID: {chainId}</div>
-            <button onClick={onClickMint}>Mint Item</button>
+            <button
+              onClick={onClickMint}
+              disabled={["PendingSignature", "Mining"].includes(state.status)}
+            >
+              {["PendingSignature", "Mining"].includes(state.status)
+                ? "Processing"
+                : "  Mint Item"}
+            </button>
             <br />
             <div>Premium: {item1.toString()}</div>
             <div>Super Rare: {item2.toString()}</div>
