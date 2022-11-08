@@ -1,0 +1,29 @@
+{
+  "name": "cannabis-mint-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "preview": "vite preview",
+    "typechain:generate": "yarn typechain --target=ethers-v5 ./src/abi/**/*.json --out-dir=./gen/types",
+    "build": "yarn typechain:generate && tsc && vite build"
+  },
+  "dependencies": {
+    "@ethersproject/contracts": "^5.7.0",
+    "@typechain/ethers-v5": "^10.1.1",
+    "@usedapp/core": "^1.2.1",
+    "ethers": "^5.7.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typechain": "^8.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "@vitejs/plugin-react": "^2.2.0",
+    "@web3-react/types": "^6.0.7",
+    "typescript": "^4.6.4",
+    "vite": "^3.2.3"
+  }
+}
