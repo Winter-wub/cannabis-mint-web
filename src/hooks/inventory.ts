@@ -2,7 +2,7 @@ import { Contract } from "@ethersproject/contracts";
 import { useCall, useEthers } from "@usedapp/core";
 import axios from "axios";
 import { utils } from "ethers";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import abi from "../abi/CanItem.json";
 import { CanItem } from "./../../gen/types/CanItem";
 
@@ -10,57 +10,61 @@ const wethinterface = new utils.Interface(abi);
 const canItemAddress = "0xA8600548Dc3eC0680A91A827Ff26F5Def533D549";
 const contract = new Contract(canItemAddress, wethinterface) as CanItem;
 
-function useInventory(itemId: number) {
+type Item = { id: number; amount: string; uri: string; image?: string };
+
+function useInventory(itemIds: number[]) {
   const { account } = useEthers();
-  const [image, setImage] = useState<string>();
+  const [items, setItems] = useState<Item[]>([]);
 
-  const balanceOf = useCall({
-    contract: contract,
-    method: "balanceOf",
-    args: [account as string, itemId],
-  });
+  const amountCalls =
+    itemIds?.map((item) => {
+      return useCall({
+        contract: contract,
+        method: "balanceOf",
+        args: [account as string, item],
+      });
+    }) ?? [];
 
-  const uri = useCall({
-    contract: contract,
-    method: "uri",
-    args: [itemId],
-  });
+  const uriCalls =
+    itemIds?.map((item) => {
+      return useCall({
+        contract: contract,
+        method: "uri",
+        args: [item],
+      });
+    }) ?? [];
 
-  const value = useMemo(() => {
-    if (balanceOf?.value) {
-      return balanceOf.value;
+  const fetchImageURI = useCallback(async (items: Item[]) => {
+    try {
+      const promises = items.map(async (item) => {
+        const response = await axios.get(item.uri);
+        return {
+          ...item,
+          image: response.data.image,
+        };
+      });
+      const result = await Promise.all(promises);
+      setItems(result);
+    } catch (e) {
+      console.log(e);
     }
-    return 0;
-  }, [balanceOf]);
-
-  const uriValue = useMemo(() => {
-    if (uri?.value) {
-      return uri.value[0];
-    }
-    return "";
-  }, [uri]);
-
-  const fetchImageURI = useCallback(async () => {
-    if (uriValue !== "") {
-      try {
-        console.log(uriValue);
-        const response = await axios.get(uriValue);
-        setImage(response.data.image);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }, [uriValue]);
+  }, []);
 
   useEffect(() => {
-    fetchImageURI();
-  }, [fetchImageURI]);
+    if (Array.isArray(amountCalls) && Array.isArray(uriCalls)) {
+      const items: Item[] = [];
+      amountCalls.forEach((amount, index) => {
+        items.push({
+          id: itemIds[index],
+          amount: amount?.value?.[0].toString() as unknown as string,
+          uri: String(uriCalls[index]?.value?.[0]),
+        });
+      });
+      fetchImageURI(items);
+    }
+  }, [amountCalls, uriCalls, fetchImageURI]);
 
-  return {
-    balance: value,
-    uri: uriValue,
-    image: image,
-  };
+  return items;
 }
 
 export default useInventory;

@@ -304,7 +304,13 @@ const _abi = [
   {
     inputs: [],
     name: "claimNFT",
-    outputs: [],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "payable",
     type: "function",
   },
@@ -455,30 +461,6 @@ const _abi = [
         internalType: "bool",
         name: "",
         type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "maxNumber",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "minNumber",
-        type: "uint256",
-      },
-    ],
-    name: "random",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
