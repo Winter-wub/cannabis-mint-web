@@ -1,22 +1,19 @@
 import { useConfig, useEthers } from "@usedapp/core";
-import { utils } from "ethers";
 import { useCallback } from "react";
 import "./App.css";
-import Inventory from "./component/Inventory";
+import Allowance from "./component/allowance";
 import useClaimCanItem from "./hooks/claimItem";
 function App() {
   const { activateBrowserWallet, account, deactivate, chainId } = useEthers();
   const { readOnlyUrls } = useConfig();
-  const { claimNFT, state } = useClaimCanItem();
+  const { claimNFT, claimState, price } = useClaimCanItem();
 
   // get item that user claimed
 
   const onClickMint = useCallback(async () => {
     try {
       // fetch api first price
-      const trxReceipt = await claimNFT({
-        value: utils.parseEther("0.000005"),
-      });
+      const trxReceipt = await claimNFT();
       if (trxReceipt) {
         alert("Mint success at " + trxReceipt.blockHash);
       } else {
@@ -41,16 +38,20 @@ function App() {
           <div>
             <div>Account: {account}</div>
             <div>Network ID: {chainId}</div>
-            <button
-              onClick={onClickMint}
-              disabled={["PendingSignature", "Mining"].includes(state.status)}
-            >
-              {["PendingSignature", "Mining"].includes(state.status)
-                ? "Processing"
-                : "  Mint Item"}
-            </button>
             <br />
-            <Inventory />
+            <Allowance>
+              <button
+                onClick={onClickMint}
+                disabled={["PendingSignature", "Mining"].includes(
+                  claimState.status
+                )}
+              >
+                {["PendingSignature", "Mining"].includes(claimState.status)
+                  ? "Processing"
+                  : `  Mint Item ${price} CAN`}
+              </button>
+            </Allowance>
+            {/* <Inventory /> */}
           </div>
         )}
       </div>

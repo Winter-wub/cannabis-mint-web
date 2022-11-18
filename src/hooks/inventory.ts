@@ -3,11 +3,11 @@ import { useCall, useEthers } from "@usedapp/core";
 import axios from "axios";
 import { utils } from "ethers";
 import { useCallback, useEffect, useState } from "react";
-import abi from "../abi/CanItem.json";
+import abi from "../abi/CannabisItem.json";
 import { CanItem } from "./../../gen/types/CanItem";
 
 const wethinterface = new utils.Interface(abi);
-const canItemAddress = "0xA8600548Dc3eC0680A91A827Ff26F5Def533D549";
+const canItemAddress = "0xCB73A13B0bfDf9B6E15629921AF32e98ee463212";
 const contract = new Contract(canItemAddress, wethinterface) as CanItem;
 
 type Item = { id: number; amount: string; uri: string; image?: string };

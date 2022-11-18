@@ -4,7 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type { CanItem, CanItemInterface } from "../CanItem";
+import type { CannabisItem, CannabisItemInterface } from "../CannabisItem";
 
 const _abi = [
   {
@@ -753,15 +753,15 @@ const _abi = [
   },
 ];
 
-export class CanItem__factory {
+export class CannabisItem__factory {
   static readonly abi = _abi;
-  static createInterface(): CanItemInterface {
-    return new utils.Interface(_abi) as CanItemInterface;
+  static createInterface(): CannabisItemInterface {
+    return new utils.Interface(_abi) as CannabisItemInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): CanItem {
-    return new Contract(address, _abi, signerOrProvider) as CanItem;
+  ): CannabisItem {
+    return new Contract(address, _abi, signerOrProvider) as CannabisItem;
   }
 }

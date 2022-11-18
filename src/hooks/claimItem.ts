@@ -1,22 +1,33 @@
 import { Contract } from "@ethersproject/contracts";
-import { useContractFunction } from "@usedapp/core";
+import { useCall, useContractFunction } from "@usedapp/core";
 import { utils } from "ethers";
 import { CanItem } from "../../gen/types/CanItem";
-import abi from "../abi/CanItem.json";
+import abi from "../abi/CannabisItem.json";
 
 const wethinterface = new utils.Interface(abi);
-const canItemAddress = "0xA8600548Dc3eC0680A91A827Ff26F5Def533D549";
+const canItemAddress = "0xCB73A13B0bfDf9B6E15629921AF32e98ee463212";
 const contract = new Contract(canItemAddress, wethinterface) as CanItem;
 
 function useClaimCanItem() {
-  const { state, send } = useContractFunction(contract, "claimNFT", {
-    transactionName: "Claim NFT", // optional
-    gasLimitBufferPercentage: 10,
+  const { state: claimState, send } = useContractFunction(
+    contract,
+    "claimNFT",
+    {
+      transactionName: "Claim NFT", // optional
+      gasLimitBufferPercentage: 10,
+    }
+  );
+
+  const state = useCall({
+    contract: contract,
+    method: "getClaimPrice",
+    args: [],
   });
 
   return {
+    price: state?.value?.[0] ? utils.formatEther(state.value[0]) : 0,
     claimNFT: send,
-    state,
+    claimState,
   };
 }
 
